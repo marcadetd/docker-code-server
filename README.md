@@ -29,11 +29,12 @@ Find us at:
 
 # [linuxserver/code-server](https://github.com/linuxserver/docker-code-server)
 
+[![Scarf.io pulls](https://scarf.sh/installs-badge/linuxserver-ci/linuxserver%2Fcode-server?color=94398d&label-color=555555&logo-color=ffffff&style=for-the-badge&package-type=docker)](https://scarf.sh/gateway/linuxserver-ci/docker/linuxserver%2Fcode-server)
 [![GitHub Stars](https://img.shields.io/github/stars/linuxserver/docker-code-server.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/linuxserver/docker-code-server)
 [![GitHub Release](https://img.shields.io/github/release/linuxserver/docker-code-server.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/linuxserver/docker-code-server/releases)
 [![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=GitHub%20Package&logo=github)](https://github.com/linuxserver/docker-code-server/packages)
 [![GitLab Container Registry](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=GitLab%20Registry&logo=gitlab)](https://gitlab.com/linuxserver.io/docker-code-server/container_registry)
-[![MicroBadger Layers](https://img.shields.io/microbadger/layers/linuxserver/code-server.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge)](https://microbadger.com/images/linuxserver/code-server "Get your own version badge on microbadger.com")
+[![Quay.io](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=Quay.io)](https://quay.io/repository/linuxserver.io/code-server)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/code-server.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/linuxserver/code-server)
 [![Docker Stars](https://img.shields.io/docker/stars/linuxserver/code-server.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/linuxserver/code-server)
 [![Jenkins Build](https://img.shields.io/jenkins/build?labelColor=555555&logoColor=ffffff&style=for-the-badge&jobUrl=https%3A%2F%2Fci.linuxserver.io%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Fdocker-code-server%2Fjob%2Fmaster%2F&logo=jenkins)](https://ci.linuxserver.io/job/Docker-Pipeline-Builders/job/docker-code-server/job/master/)
@@ -51,26 +52,27 @@ Find us at:
 
 ## Supported Architectures
 
-Our images support multiple architectures such as `x86-64`, `arm64` and `armhf`. We utilise the docker manifest for multi-platform awareness. More information is available from docker [here](https://github.com/docker/distribution/blob/master/docs/spec/manifest-v2-2.md#manifest-list) and our announcement [here](https://blog.linuxserver.io/2019/02/21/the-lsio-pipeline-project/).
+We utilise the docker manifest for multi-platform awareness. More information is available from docker [here](https://github.com/docker/distribution/blob/master/docs/spec/manifest-v2-2.md#manifest-list) and our announcement [here](https://blog.linuxserver.io/2019/02/21/the-lsio-pipeline-project/).
 
-Simply pulling `ghcr.io/linuxserver/code-server` should retrieve the correct image for your arch, but you can also pull specific arch images via tags.
+Simply pulling `lscr.io/linuxserver/code-server:latest` should retrieve the correct image for your arch, but you can also pull specific arch images via tags.
 
 The architectures supported by this image are:
 
-| Architecture | Tag |
-| :----: | --- |
-| x86-64 | amd64-latest |
-| arm64 | arm64v8-latest |
-| armhf | arm32v7-latest |
+| Architecture | Available | Tag |
+| :----: | :----: | ---- |
+| x86-64 | ✅ | amd64-\<version tag\> |
+| arm64 | ✅ | arm64v8-\<version tag\> |
+| armhf| ✅ | arm32v7-\<version tag\> |
 
 ## Version Tags
 
-This image provides various versions that are available via tags. `latest` tag usually provides the latest stable version. Others are considered under development and caution must be exercised when using them.
+This image provides various versions that are available via tags. Please read the descriptions carefully and exercise caution when using unstable or development tags.
 
-| Tag | Description |
-| :----: | --- |
-| latest | Stable releases |
-| development | DEPRECATED (no longer updated) - Prereleases from their GitHub |
+| Tag | Available | Description |
+| :----: | :----: |--- |
+| latest | ✅ | Stable releases |
+| focal | ✅ | DEPRECATED (no longer updated, `latest` is rebased on focal) - Stable releases, based on Ubuntu Focal |
+| development | ✅ | DEPRECATED (no longer updated) - Prereleases from their GitHub |
 
 ## Application Setup
 
@@ -91,16 +93,14 @@ How to create the [hashed password](https://github.com/cdr/code-server/blob/mast
 
 Here are some example snippets to help you get started creating a container.
 
-### docker-compose ([recommended](https://docs.linuxserver.io/general/docker-compose))
-
-Compatible with docker-compose v2 schemas.
+### docker-compose (recommended, [click here for more info](https://docs.linuxserver.io/general/docker-compose))
 
 ```yaml
 ---
 version: "2.1"
 services:
   code-server:
-    image: ghcr.io/linuxserver/code-server
+    image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
     environment:
       - PUID=1000
@@ -111,6 +111,7 @@ services:
       - SUDO_PASSWORD=password #optional
       - SUDO_PASSWORD_HASH= #optional
       - PROXY_DOMAIN=code-server.my.domain #optional
+      - DEFAULT_WORKSPACE=/config/workspace #optional
     volumes:
       - /path/to/appdata/config:/config
     ports:
@@ -118,7 +119,7 @@ services:
     restart: unless-stopped
 ```
 
-### docker cli
+### docker cli ([click here for more info](https://docs.docker.com/engine/reference/commandline/cli/))
 
 ```bash
 docker run -d \
@@ -131,10 +132,11 @@ docker run -d \
   -e SUDO_PASSWORD=password `#optional` \
   -e SUDO_PASSWORD_HASH= `#optional` \
   -e PROXY_DOMAIN=code-server.my.domain `#optional` \
+  -e DEFAULT_WORKSPACE=/config/workspace `#optional` \
   -p 8443:8443 \
   -v /path/to/appdata/config:/config \
   --restart unless-stopped \
-  ghcr.io/linuxserver/code-server
+  lscr.io/linuxserver/code-server:latest
 ```
 
 ## Parameters
@@ -152,6 +154,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e SUDO_PASSWORD=password` | If this optional variable is set, user will have sudo access in the code-server terminal with the specified password. |
 | `-e SUDO_PASSWORD_HASH=` | Optionally set sudo password via hash (takes priority over `SUDO_PASSWORD` var). Format is `$type$salt$hashed`. |
 | `-e PROXY_DOMAIN=code-server.my.domain` | If this optional variable is set, this domain will be proxied for subdomain proxying. See [Documentation](https://github.com/cdr/code-server/blob/master/docs/FAQ.md#sub-domains) |
+| `-e DEFAULT_WORKSPACE=/config/workspace` | If this optional variable is set, code-server will open this directory by default |
 | `-v /config` | Contains all relevant configuration files. |
 
 ## Environment variables from files (Docker secrets)
@@ -197,7 +200,7 @@ We publish various [Docker Mods](https://github.com/linuxserver/docker-mods) to 
 * container version number
   * `docker inspect -f '{{ index .Config.Labels "build_version" }}' code-server`
 * image version number
-  * `docker inspect -f '{{ index .Config.Labels "build_version" }}' ghcr.io/linuxserver/code-server`
+  * `docker inspect -f '{{ index .Config.Labels "build_version" }}' lscr.io/linuxserver/code-server:latest`
 
 ## Updating Info
 
@@ -215,7 +218,7 @@ Below are the instructions for updating containers:
 
 ### Via Docker Run
 
-* Update the image: `docker pull ghcr.io/linuxserver/code-server`
+* Update the image: `docker pull lscr.io/linuxserver/code-server:latest`
 * Stop the running container: `docker stop code-server`
 * Delete the container: `docker rm code-server`
 * Recreate a new container with the same docker run parameters as instructed above (if mapped correctly to a host folder, your `/config` folder and settings will be preserved)
@@ -250,7 +253,7 @@ cd docker-code-server
 docker build \
   --no-cache \
   --pull \
-  -t ghcr.io/linuxserver/code-server:latest .
+  -t lscr.io/linuxserver/code-server:latest .
 ```
 
 The ARM variants can be built on x86_64 hardware using `multiarch/qemu-user-static`
@@ -263,6 +266,12 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **20.02.22:** - Install using the official tarballs.
+* **29.12.21:** - Add `install-extension` as a helper for mods to install extensions.
+* **06.12.21:** - Add `DEFAULT_WORKSPACE` env var.
+* **29.11.21:** - Rebase to Ubuntu focal.
+* **16.09.21:** - Fix slow `chown` on large workspace (contents of workspace folder no longer chowned).
+* **11.07.21:** - Bump node to 14 to fix builds
 * **08.05.21:** - Fix doc link
 * **04.02.20:** - Allow setting gui password via hash using env var `HASHED_PASSWORD`.
 * **23.12.20:** - Allow setting sudo password via hash using env var `SUDO_PASSWORD_HASH`.

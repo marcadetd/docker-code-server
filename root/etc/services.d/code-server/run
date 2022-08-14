@@ -15,11 +15,11 @@ fi
 
 exec \
     s6-setuidgid abc \
-        /usr/local/bin/code-server \
+        /app/code-server/bin/code-server \
             --bind-addr 0.0.0.0:8443 \
             --user-data-dir /config/data \
             --extensions-dir /config/extensions \
             --disable-telemetry \
             --auth "${AUTH}" \
             "${PROXY_DOMAIN_ARG}" \
-            /config/workspace
+            "${DEFAULT_WORKSPACE:-/config/workspace}"
